@@ -3,6 +3,13 @@ import { z } from 'zod';
 import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
 
+type Document = {
+  name: string;
+  last_contact_date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 const dataScheme = z.object({
   name: z.string().trim().min(1, 'Name is required.'),
   last_contact_date: z.string().datetime(),
@@ -42,11 +49,11 @@ export async function createContact(formData: FormData) {
   const parsedData = dataScheme.parse(data);
 
   // Save contact to db.
-  const contact = await db.collection('contacts').insertOne({
+  const contact = await db.collection<Document>('contacts').insertOne({
     name: parsedData.name,
-    last_contact_date: parsedData.last_contact_date,
+    last_contact_date: new Date(parsedData.last_contact_date),
     createdAt: new Date(),
-    updateAt: new Date(),
+    updatedAt: new Date(),
   });
 
   // Save contact image to storage.
@@ -71,6 +78,6 @@ export async function createContact(formData: FormData) {
   });
 
   return {
-    insertedId: contact.insertedId,
+    insertedId: contact.insertedId.toString(),
   };
 }

@@ -4,7 +4,10 @@ import { z } from 'zod';
 import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
 
-type ContactDocument = {
+import { GetSerializedContactsResponse } from '../_types/GetSerializedContactsResponse';
+import { SerializedContact } from '../_types/SerializedContact';
+
+type Document = {
   _id: ObjectId;
   name: string;
   image?: {
@@ -17,25 +20,25 @@ type ContactDocument = {
 };
 
 const paramsScheme = z.object({
-  page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).default(10),
+  page: z.coerce.number().min(1),
+  limit: z.coerce.number().min(10),
 });
 
-export async function getContacts(params: {
+export async function getSerializedContacts(params: {
   page?: number | string;
   limit?: number | string;
-}) {
+}): Promise<GetSerializedContactsResponse> {
   const { page, limit } = paramsScheme.parse(params);
 
   const db = await getDb();
 
   const skip = (page - 1) * limit;
 
-  const count = await db.collection('contacts').countDocuments();
+  const total = await db.collection('contacts').countDocuments();
 
   const data = await db
     .collection('contacts')
-    .aggregate<ContactDocument>([
+    .aggregate<Document>([
       {
         $lookup: {
           from: 'avatars',
@@ -50,14 +53,28 @@ export async function getContacts(params: {
           preserveNullAndEmptyArrays: true,
         },
       },
-      { $sort: { createdAt: 1 } },
+      { $sort: { last_contact_date: -1 } },
       { $skip: skip },
       { $limit: limit },
     ])
     .toArray();
 
+  const contacts = data.map<SerializedContact>((contact) => ({
+    _id: contact._id.toString(),
+    name: contact.name,
+    image: contact.image
+      ? {
+          path: contact.image.path,
+          signedUrl: contact.image.signedUrl,
+        }
+      : undefined,
+    last_contact_date: contact.last_contact_date.toISOString(),
+    createdAt: contact.createdAt.toISOString(),
+    updatedAt: contact.updatedAt.toISOString(),
+  }));
+
   // Get file names from contacts.
-  const avatarFileNames = data
+  const avatarFileNames = contacts
     .filter((contact) => contact.image)
     .map((contact) => contact.image?.path as string);
 
@@ -69,7 +86,7 @@ export async function getContacts(params: {
   const signedUrls = await Promise.all(signedUrlsPromises);
 
   // Map signed URLs back to contacts.
-  for (const contact of data) {
+  for (const contact of contacts) {
     if (contact.image) {
       const index = avatarFileNames.indexOf(contact.image.path);
       if (index !== -1) {
@@ -79,8 +96,11 @@ export async function getContacts(params: {
   }
 
   return {
-    data,
-    count,
+    data: contacts,
+    count: contacts.length,
+    total,
+    page,
+    limit,
   };
 }
 

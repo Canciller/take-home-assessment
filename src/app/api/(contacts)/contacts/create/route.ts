@@ -1,3 +1,5 @@
+import { serializeError } from 'serialize-error';
+
 import { createContact } from '../../_services/createContact';
 
 const sleep = (ms: number) =>
@@ -13,8 +15,10 @@ export async function POST(request: Request) {
 
     return Response.json(data);
   } catch (error) {
+    console.error(error);
+
     return Response.json({
-      error,
+      error: serializeError(error),
     });
   }
 }

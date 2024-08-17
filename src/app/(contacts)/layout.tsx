@@ -8,8 +8,8 @@ export default function Layout({
   modals: React.ReactNode;
 }>) {
   return (
-    <>
-      <header className="border-border flex items-center justify-between border-b border-solid px-10 py-5">
+    <div className="flex h-screen flex-col">
+      <header className="flex items-center justify-between border-b border-solid border-border px-10 py-5">
         <h1 className="text-xl font-semibold">Contacts</h1>
         <ThemeDropdown />
       </header>
@@ -17,6 +17,6 @@ export default function Layout({
       {children}
 
       {modals}
-    </>
+    </div>
   );
 }
