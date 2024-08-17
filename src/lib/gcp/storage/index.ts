@@ -1,6 +1,7 @@
 import { Storage } from '@google-cloud/storage';
 
 export const storage = new Storage({
+  apiEndpoint: process.env.GCP_API_ENDPOINT,
   projectId: process.env.GCP_PROJECT_ID,
   credentials: {
     client_email: process.env.GCP_STORAGE_CLIENT_EMAIL,

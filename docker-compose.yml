@@ -9,6 +9,13 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/data/db
+  fake-gcs-server:
+    image: fsouza/fake-gcs-server
+    ports:
+      - 4443:4443
+    volumes:
+      - ./examples/data:/data
+    command: -scheme http -public-host 127.0.0.1:4443
 volumes:
   mongodata:
     driver: local
