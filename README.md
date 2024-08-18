@@ -7,7 +7,8 @@ See here [https://take-home-assessment-sandy.vercel.app](https://take-home-asses
 - **Next.js**: I have experience with this framework and wanted to explore some of its recent APIs for routing, such as parallel routes and intercepting routes for modals.
 - **TailwindCSS**: I have experience with this and like how quickly you can style components.
 - **shadcn**: I have experience with this library. It integrates with TailwindCSS, and I like how the components look and how easily they can be customized.
-- **MongoDB**: I have experience with this database, and its simplicity fits well with this project.
+- **Vercel**: I like that I can quickly deploy a Next.js site with only one click and don't need to manage a lot of infrastructure.
+- **Atlas MongoDB**: I have experience with this database, and its simplicity fits well with this project.
 - **Google Cloud Storage**: I like the API that GCS provides for Node.js, and I have used it before in a personal project.
 - **Docker**: It simplifies setting up a local development environment, avoiding the need to download binaries manually.
 
