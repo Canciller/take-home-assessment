@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogOverlay,
   DialogTitle,
 } from './ui/dialog';
 
@@ -26,16 +25,14 @@ export function Modal({
 
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
-      <DialogOverlay>
-        <DialogDescription></DialogDescription>
-        <DialogContent className="overflow-y-hidden">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
+      <DialogContent className="overflow-y-hidden">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
 
-          {children}
-        </DialogContent>
-      </DialogOverlay>
+        {children}
+      </DialogContent>
     </Dialog>
   );
 }

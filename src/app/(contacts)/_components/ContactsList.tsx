@@ -32,7 +32,7 @@ export function ContactsList() {
 
     if (query.isPending) {
       return (
-        <p className="text-muted-foreground m-10 text-center text-sm">
+        <p className="m-10 text-center text-sm text-muted-foreground">
           Loading contacts...
         </p>
       );
@@ -40,14 +40,14 @@ export function ContactsList() {
 
     if (error) {
       return (
-        <p className="text-destructive m-10 text-center text-sm">
+        <p className="m-10 text-center text-sm text-destructive">
           {error.message}
         </p>
       );
     }
 
     return (
-      <p className="text-muted-foreground m-10 text-center text-sm">
+      <p className="m-10 text-center text-sm text-muted-foreground">
         No contacts found.
       </p>
     );
