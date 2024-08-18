@@ -15,8 +15,13 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error(error);
 
-    return Response.json({
-      error: serializeError(error),
-    });
+    return Response.json(
+      {
+        error: serializeError(error),
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

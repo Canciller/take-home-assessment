@@ -1,14 +1,16 @@
 import { Storage } from '@google-cloud/storage';
 
+const private_key = new Buffer(
+  process.env.GCP_STORAGE_PRIVATE_KEY as string,
+  'base64'
+).toString('ascii');
+
 export const storage = new Storage({
   apiEndpoint: process.env.GCP_API_ENDPOINT,
   projectId: process.env.GCP_PROJECT_ID,
   credentials: {
     client_email: process.env.GCP_STORAGE_CLIENT_EMAIL,
-    private_key: (process.env.GCP_STORAGE_PRIVATE_KEY as string).replace(
-      /\\n/g,
-      '\n'
-    ),
+    private_key,
   },
 });
 
