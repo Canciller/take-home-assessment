@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 import { getDb } from '@/lib/mongo';
@@ -23,7 +22,7 @@ export async function getSerializedContacts(params: {
 
   const skip = (page - 1) * limit;
 
-  const total = await db.collection('contacts').countDocuments();
+  const totalCount = await db.collection('contacts').countDocuments();
 
   const data = await db
     .collection('contacts')
@@ -87,7 +86,8 @@ export async function getSerializedContacts(params: {
   return {
     data: contacts,
     count: contacts.length,
-    total,
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
     page,
     limit,
   };

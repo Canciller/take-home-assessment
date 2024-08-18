@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogOverlay,
   DialogTitle,
@@ -26,6 +27,7 @@ export function Modal({
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
       <DialogOverlay>
+        <DialogDescription></DialogDescription>
         <DialogContent className="overflow-y-hidden">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

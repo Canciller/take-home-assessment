@@ -2,6 +2,8 @@ import { formatDate } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useContactsParams } from '../_hooks/useContactsParams';
+
 export function ContactsListItem({
   id,
   imageUrl,
@@ -13,9 +15,11 @@ export function ContactsListItem({
   name: string;
   lastContactDate: string;
 }) {
+  const params = useContactsParams();
+
   return (
     <Link
-      href={`/contacts/${id}`}
+      href={`/contacts/${id}?page=${params.page}&limit=${params.limit}`}
       className="hover:bg-accent flex items-center justify-between border-b px-5 py-2 last:border-none"
     >
       <div className="flex items-center gap-5">
