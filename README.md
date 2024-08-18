@@ -25,7 +25,7 @@ See here [https://take-home-assessment-sandy.vercel.app](https://take-home-asses
    cp .env.example .env.local
    ```
 
-2. Install dependendies:
+2. Install dependencies:
 
    ```bash
    npm install
