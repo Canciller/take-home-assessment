@@ -120,7 +120,7 @@ export function CreateContactForm({
         />
 
         {mutation.error ? (
-          <p className="text-destructive text-sm">{mutation.error.message}</p>
+          <p className="text-sm text-destructive">{mutation.error.message}</p>
         ) : null}
 
         <Button type="submit" disabled={mutation.isPending}>
