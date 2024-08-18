@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Take-Home Assessment
 
-## Getting Started
+See here [https://take-home-assessment-sandy.vercel.app](https://take-home-assessment-sandy.vercel.app/)
 
-First, run the development server:
+## Why I Chose This Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js**: I have experience with this framework and wanted to explore some of its recent APIs for routing, such as parallel routes and intercepting routes for modals.
+- **TailwindCSS**: I have experience with this and like how quickly you can style components.
+- **shadcn**: I have experience with this library. It integrates with TailwindCSS, and I like how the components look and how easily they can be customized.
+- **MongoDB**: I have experience with this database, and its simplicity fits well with this project.
+- **Google Cloud Storage**: I like the API that GCS provides for Node.js, and I have used it before in a personal project.
+- **Docker**: It simplifies setting up a local development environment, avoiding the need to download binaries manually.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Requirements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js (Tested on v20.11.1)
+- Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## How to Run the Project Locally
 
-## Learn More
+1. Copy `.env.example` to `.env.local` and leave it as is:
+   
+   ```bash
+   cp .env.example .env.local
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Install dependendies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. Run Docker containers in detached mode:
 
-## Deploy on Vercel
+   ```bash
+   docker compose up -d
+   ```
+   This will run the MongoDB and fake Google Cloud Storage containers for testing the API locally.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Run the Next.js project:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   npm run dev
+   ```
+
+5. Preview the project at [http://localhost:3000](http://localhost:3000)
