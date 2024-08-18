@@ -4,7 +4,7 @@ export function useContactsParams() {
   const searchParams = useSearchParams();
 
   return {
-    page: searchParams.get('page') ?? 1,
-    limit: searchParams.get('limit') ?? 10,
+    page: searchParams.get('page') ?? '1',
+    limit: searchParams.get('limit') ?? '10',
   };
 }

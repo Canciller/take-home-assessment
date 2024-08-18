@@ -18,8 +18,8 @@ export default async function Home({
   const queryClient = new QueryClient();
 
   const params = {
-    page: searchParams.page ?? 1,
-    limit: searchParams.limit ?? 10,
+    page: searchParams.page ?? '1',
+    limit: searchParams.limit ?? '10',
   };
 
   await queryClient.prefetchQuery({
