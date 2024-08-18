@@ -39,36 +39,43 @@ export function ContactsListItem({
 }) {
   const params = useContactsParams();
 
+  const formattedDate = formatDate(new Date(lastContactDate), 'PPP, hh:mm aaa');
+
   return (
     <Link
       href={`/contacts/${id}?page=${params.page}&limit=${params.limit}`}
-      className="flex items-center justify-between border-b px-5 py-2 last:border-none hover:bg-accent"
+      className="relative flex items-center justify-between gap-5 border-b px-5 py-2 last:border-none hover:bg-accent"
     >
-      <div className="flex items-center gap-5">
-        {imageUrl ? (
-          <Image
-            className="h-16 w-16 rounded-full object-cover"
-            src={imageUrl}
-            width={128}
-            height={128}
-            alt={`${name} image`}
-          />
-        ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-foreground">
-            {name.at(0)?.toUpperCase()}
+      <div className="flex flex-1 items-center justify-between">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-5">
+          {imageUrl ? (
+            <Image
+              className="h-20 w-20 rounded-full object-cover md:h-16 md:w-16"
+              src={imageUrl}
+              width={128}
+              height={128}
+              alt={`${name} image`}
+            />
+          ) : (
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-foreground">
+              {name.at(0)?.toUpperCase()}
+            </div>
+          )}
+
+          <div>
+            <p>{name}</p>
+            <p className="text-sm text-muted-foreground md:hidden">
+              {formattedDate}
+            </p>
           </div>
-        )}
+        </div>
 
-        <p>{name}</p>
-      </div>
-
-      <div className="flex items-center gap-5">
-        <p className="text-sm text-muted-foreground">
-          {formatDate(new Date(lastContactDate), 'PPP, hh:mm aaa')}
+        <p className="hidden text-sm text-muted-foreground md:block">
+          {formattedDate}
         </p>
-
-        <Actions contactId={id} />
       </div>
+
+      <Actions contactId={id} />
     </Link>
   );
 }
@@ -88,7 +95,10 @@ function Actions({ contactId }: { contactId: string }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="h-8 w-8 p-0">
+          <Button
+            variant="outline"
+            className="absolute right-5 top-5 h-8 w-8 p-0 md:relative md:right-auto md:top-auto"
+          >
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>

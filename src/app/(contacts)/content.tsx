@@ -13,7 +13,7 @@ export function Content() {
 
   return (
     <main className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between px-10 pb-5 pt-10">
+      <header className="flex flex-wrap items-center justify-between gap-5 px-5 pb-5 pt-5 md:px-10 md:pt-10">
         <h1 className="text-lg font-semibold">Contacts</h1>
 
         <Button asChild>
@@ -27,7 +27,7 @@ export function Content() {
       </header>
 
       <div className="relative flex-1">
-        <div className="absolute inset-0 flex flex-col gap-10 px-10 pb-10">
+        <div className="absolute inset-0 flex flex-col gap-5 px-5 pb-5 md:gap-10 md:px-10 md:pb-10">
           <ContactsList />
         </div>
       </div>

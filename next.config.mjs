@@ -12,6 +12,10 @@ const nextConfig = {
         hostname: 'localhost',
         port: '4443',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
     ],
   },
 };

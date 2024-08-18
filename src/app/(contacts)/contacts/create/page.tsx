@@ -18,7 +18,7 @@ export default function AddContact() {
   const router = useRouter();
 
   return (
-    <main className="flex flex-col gap-10 p-10">
+    <main className="flex flex-col gap-10 p-5 md:p-10">
       <div className="flex flex-col gap-5">
         <h1 className="text-lg font-semibold">Create a new contact</h1>
 

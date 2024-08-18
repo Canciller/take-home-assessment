@@ -9,7 +9,7 @@ import { SerializedContact } from '../_types/SerializedContact';
 
 const paramsScheme = z.object({
   page: z.coerce.number().min(1),
-  limit: z.coerce.number().min(10),
+  limit: z.coerce.number().min(1),
 });
 
 export async function getSerializedContacts(params: {

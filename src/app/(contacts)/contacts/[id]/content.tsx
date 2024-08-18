@@ -15,7 +15,7 @@ import { EditContactForm } from '../../_components/EditContactForm';
 
 export function Content() {
   return (
-    <main className="flex flex-col gap-10 p-10">
+    <main className="flex flex-col gap-10 p-5 md:p-10">
       <div className="flex flex-col gap-5">
         <h1 className="text-lg font-semibold">Edit contact</h1>
 

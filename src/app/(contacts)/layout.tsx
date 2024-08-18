@@ -8,8 +8,8 @@ export default function Layout({
   modals: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-screen flex-col">
-      <header className="flex items-center justify-between border-b border-solid border-border px-10 py-5">
+    <div className="flex h-screen min-w-[320px] flex-col">
+      <header className="flex items-center justify-between border-b border-solid border-border px-5 py-5 md:px-10">
         <h1 className="text-xl font-semibold">Contacts</h1>
         <ThemeDropdown />
       </header>

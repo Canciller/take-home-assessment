@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   Pagination,
   PaginationContent,
@@ -5,6 +7,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import { generatePaginationLinks } from './generatePaginationLinks';
 
@@ -21,27 +30,47 @@ export default function Paginator({
   onPageChange,
   showPreviousNext,
 }: PaginatorProps) {
+  const selectItems = useMemo(() => {
+    return new Array(totalPages).fill(0).map((_, i) => (
+      <SelectItem key={i} value={(i + 1).toString()}>
+        {i + 1}
+      </SelectItem>
+    ));
+  }, [totalPages]);
+
   return (
-    <Pagination>
-      <PaginationContent>
-        {showPreviousNext && totalPages ? (
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => onPageChange(currentPage - 1)}
-              disabled={currentPage - 1 < 1}
-            />
-          </PaginationItem>
-        ) : null}
-        {generatePaginationLinks(currentPage, totalPages, onPageChange)}
-        {showPreviousNext && totalPages ? (
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => onPageChange(currentPage + 1)}
-              disabled={currentPage > totalPages - 1}
-            />
-          </PaginationItem>
-        ) : null}
-      </PaginationContent>
-    </Pagination>
+    <>
+      <Select
+        value={currentPage.toString()}
+        onValueChange={(page) => onPageChange(parseInt(page))}
+      >
+        <SelectTrigger className="ml-auto w-[100px] md:hidden">
+          <SelectValue placeholder="Page" />
+        </SelectTrigger>
+        <SelectContent>{selectItems}</SelectContent>
+      </Select>
+
+      <Pagination className="hidden md:flex">
+        <PaginationContent>
+          {showPreviousNext && totalPages ? (
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage - 1 < 1}
+              />
+            </PaginationItem>
+          ) : null}
+          {generatePaginationLinks(currentPage, totalPages, onPageChange)}
+          {showPreviousNext && totalPages ? (
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage > totalPages - 1}
+              />
+            </PaginationItem>
+          ) : null}
+        </PaginationContent>
+      </Pagination>
+    </>
   );
 }
