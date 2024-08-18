@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
 
-type Document = {
+type ContactDocument = {
   name: string;
   last_contact_date: Date;
   createdAt: Date;
@@ -49,7 +49,7 @@ export async function createContact(formData: FormData) {
   const parsedData = dataScheme.parse(data);
 
   // Save contact to db.
-  const contact = await db.collection<Document>('contacts').insertOne({
+  const contact = await db.collection<ContactDocument>('contacts').insertOne({
     name: parsedData.name,
     last_contact_date: new Date(parsedData.last_contact_date),
     createdAt: new Date(),

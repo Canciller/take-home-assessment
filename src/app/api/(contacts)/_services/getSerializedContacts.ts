@@ -1,23 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
-import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
 
+import { getSignedUrl } from './getSignedUrl';
+import { ContactDocument } from '../_types/ContactDocument';
 import { GetSerializedContactsResponse } from '../_types/GetSerializedContactsResponse';
 import { SerializedContact } from '../_types/SerializedContact';
-
-type Document = {
-  _id: ObjectId;
-  name: string;
-  image?: {
-    path: string;
-    signedUrl: string;
-  };
-  last_contact_date: Date;
-  createdAt: Date;
-  updatedAt: Date;
-};
 
 const paramsScheme = z.object({
   page: z.coerce.number().min(1),
@@ -38,7 +27,7 @@ export async function getSerializedContacts(params: {
 
   const data = await db
     .collection('contacts')
-    .aggregate<Document>([
+    .aggregate<ContactDocument>([
       {
         $lookup: {
           from: 'avatars',
@@ -102,13 +91,4 @@ export async function getSerializedContacts(params: {
     page,
     limit,
   };
-}
-
-async function getSignedUrl(fileName: string): Promise<string> {
-  const [url] = await avatarsBucket.file(fileName).getSignedUrl({
-    action: 'read',
-    expires: Date.now() + 24 * 60 * 60 * 1000, // 1 day
-  });
-
-  return url;
 }

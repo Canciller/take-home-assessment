@@ -2,11 +2,12 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { DatePicker } from '@/components/DatePicker';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -18,30 +19,30 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import { useCreateContact } from '../_hooks/useCreateContact';
+import { useContact } from '../_hooks/useContact';
+import { useEditContact } from '../_hooks/useEditContact';
 
 const formScheme = z.object({
   name: z.string().trim().min(1, 'Name is required.'),
   last_contact_date: z.date({
     required_error: 'Last contact date is required.',
   }),
-  image: z.instanceof(File, {
-    message: 'Image is required.',
-  }),
+  image: z.instanceof(File).optional(),
 });
 
-export function CreateContactForm({
-  onSuccess,
-}: {
-  onSuccess: (insertedId: string) => void;
-}) {
-  const mutation = useCreateContact();
+export function EditContactForm({ onSuccess }: { onSuccess?: () => void }) {
+  const query = useContact();
+  const contact = query.data?.data;
+
+  const mutation = useEditContact();
 
   const form = useForm<z.input<typeof formScheme>>({
     resolver: zodResolver(formScheme),
     defaultValues: {
-      name: '',
-      last_contact_date: new Date(),
+      name: contact?.name ?? '',
+      last_contact_date: contact?.last_contact_date
+        ? new Date(contact.last_contact_date)
+        : new Date(),
     },
   });
 
@@ -49,16 +50,18 @@ export function CreateContactForm({
     const formData = new FormData();
     formData.set('name', values.name);
     formData.set('last_contact_date', values.last_contact_date.toISOString());
-    formData.set('image', values.image);
+    if (values.image) {
+      formData.set('image', values.image);
+    }
 
     mutation.mutate(formData);
   };
 
   useEffect(() => {
-    if (mutation.data?.insertedId) {
-      onSuccess(mutation.data.insertedId);
+    if (mutation.isSuccess) {
+      onSuccess?.();
     }
-  }, [mutation.data?.insertedId, onSuccess]);
+  }, [mutation.isSuccess, onSuccess]);
 
   return (
     <Form {...form}>
@@ -82,21 +85,12 @@ export function CreateContactForm({
           disabled={mutation.isPending}
           control={form.control}
           name="image"
-          render={({ field: { value, onChange, ...field } }) => (
-            <FormItem>
-              <FormLabel>Image *</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  onChange={(e) =>
-                    onChange(e.target.files ? e.target.files[0] : null)
-                  }
-                  type="file"
-                  accept="image/png, image/jpeg, image/gif"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          render={({ field }) => (
+            <ImageFormItem
+              field={field}
+              signedUrl={contact?.image?.signedUrl}
+              name={contact?.name}
+            />
           )}
         />
 
@@ -127,9 +121,60 @@ export function CreateContactForm({
           {mutation.isPending ? (
             <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
           ) : null}
-          Create contact
+          Update contact
         </Button>
       </form>
     </Form>
+  );
+}
+
+function ImageFormItem({
+  field: { onChange, value, ...field },
+  signedUrl,
+  name,
+}: {
+  field: any;
+  signedUrl?: string;
+  name?: string;
+}) {
+  const [src, setSrc] = useState<string | undefined>(undefined);
+
+  return (
+    <FormItem>
+      <FormLabel>Image</FormLabel>
+      <FormControl>
+        <>
+          <Avatar className="h-20 w-20">
+            <AvatarImage className="object-cover" src={src ?? signedUrl} />
+            <AvatarFallback>{name?.at(0)?.toUpperCase()}</AvatarFallback>
+          </Avatar>
+
+          <Input
+            {...field}
+            onChange={(e) => {
+              const file = e.target.files ? e.target.files[0] : undefined;
+              onChange(file);
+
+              if (!file) {
+                setSrc(undefined);
+                return;
+              }
+
+              var fr = new FileReader();
+              fr.onload = function () {
+                if (fr.result) {
+                  setSrc(fr.result.toString());
+                }
+              };
+
+              fr.readAsDataURL(file);
+            }}
+            type="file"
+            accept="image/png, image/jpeg, image/gif"
+          />
+        </>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
   );
 }

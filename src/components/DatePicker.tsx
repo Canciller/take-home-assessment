@@ -17,15 +17,18 @@ export function DatePicker({
   value,
   onChange,
   disabled,
+  calendarDisabled,
 }: {
   value: Date | undefined;
   onChange: (date: Date | undefined) => void;
-  disabled?: Matcher | Matcher[] | undefined;
+  calendarDisabled?: Matcher | Matcher[] | undefined;
+  disabled?: boolean;
 }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={'outline'}
           className={cn(
             'justify-start text-left font-normal',
@@ -38,7 +41,8 @@ export function DatePicker({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
-          disabled={disabled}
+          required
+          disabled={calendarDisabled}
           mode="single"
           selected={value}
           onSelect={onChange}

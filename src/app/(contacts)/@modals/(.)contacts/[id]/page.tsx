@@ -9,7 +9,7 @@ import { getSerializedContact } from '@/app/api/(contacts)/_services/getSerializ
 
 import { Content } from './content';
 
-export default async function EditContact({
+export default async function EditContactModal({
   params,
 }: {
   params: {
