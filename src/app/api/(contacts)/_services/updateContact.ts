@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
+import { getSession } from '@/lib/session';
 
 type ContactDocument = {
   name: string;
@@ -49,6 +50,12 @@ const dataScheme = z.object({
 });
 
 export async function updateContact(id: string, formData: FormData) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Not authorized');
+  }
+
   const db = await getDb();
 
   const data = Object.fromEntries(formData.entries());
@@ -57,6 +64,7 @@ export async function updateContact(id: string, formData: FormData) {
 
   const result = await db.collection<ContactDocument>('contacts').updateOne(
     {
+      owner: new ObjectId(session.userId),
       _id: new ObjectId(id),
     },
     {

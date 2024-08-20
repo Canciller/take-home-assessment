@@ -1,6 +1,5 @@
-import { serializeError } from 'serialize-error';
-
 import { deleteSession } from '@/lib/session';
+import { errorResponse } from '@/utils/errorResponse';
 
 export async function POST() {
   try {
@@ -8,15 +7,6 @@ export async function POST() {
 
     return new Response();
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }

@@ -47,6 +47,7 @@ export default function SignIn() {
   useEffect(() => {
     if (mutation.isSuccess) {
       router.replace('/');
+      router.refresh();
     }
   }, [mutation.isSuccess, router]);
 

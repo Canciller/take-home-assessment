@@ -8,6 +8,7 @@ export function useSignOut() {
     mutationFn: () => axios.post('/api/sign-out'),
     onSuccess: () => {
       queryClient.clear();
+      queryClient.invalidateQueries();
     },
   });
 }

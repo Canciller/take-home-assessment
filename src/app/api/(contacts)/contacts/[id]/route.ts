@@ -1,4 +1,4 @@
-import { serializeError } from 'serialize-error';
+import { errorResponse } from '@/utils/errorResponse';
 
 import { deleteContact } from '../../_services/deleteContact';
 import { getSerializedContact } from '../../_services/getSerializedContact';
@@ -16,16 +16,7 @@ export async function GET(_: Request, { params }: Extra) {
 
     return Response.json(data);
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }
 
@@ -37,16 +28,7 @@ export async function PUT(request: Request, { params }: Extra) {
 
     return new Response();
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }
 
@@ -56,15 +38,6 @@ export async function DELETE(_: Request, { params }: Extra) {
 
     return new Response();
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }

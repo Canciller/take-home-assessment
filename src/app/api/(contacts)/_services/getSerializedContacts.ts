@@ -1,6 +1,8 @@
+import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 import { getDb } from '@/lib/mongo';
+import { getSession } from '@/lib/session';
 
 import { getSignedUrl } from './getSignedUrl';
 import { ContactDocument } from '../_types/ContactDocument';
@@ -16,6 +18,12 @@ export async function getSerializedContacts(params: {
   page?: number | string;
   limit?: number | string;
 }): Promise<GetSerializedContactsResponse> {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Not authorized');
+  }
+
   const { page, limit } = paramsScheme.parse(params);
 
   const db = await getDb();
@@ -27,6 +35,11 @@ export async function getSerializedContacts(params: {
   const data = await db
     .collection('contacts')
     .aggregate<ContactDocument>([
+      {
+        $match: {
+          owner: new ObjectId(session.userId),
+        },
+      },
       {
         $lookup: {
           from: 'avatars',

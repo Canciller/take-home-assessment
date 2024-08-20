@@ -1,9 +1,12 @@
+import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 
 import { avatarsBucket } from '@/lib/gcp/storage';
 import { getDb } from '@/lib/mongo';
+import { getSession } from '@/lib/session';
 
 type ContactDocument = {
+  owner: ObjectId;
   name: string;
   last_contact_date: Date;
   createdAt: Date;
@@ -42,6 +45,12 @@ const dataScheme = z.object({
 });
 
 export async function createContact(formData: FormData) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Not authorized');
+  }
+
   const db = await getDb();
 
   const data = Object.fromEntries(formData.entries());
@@ -50,6 +59,7 @@ export async function createContact(formData: FormData) {
 
   // Save contact to db.
   const contact = await db.collection<ContactDocument>('contacts').insertOne({
+    owner: new ObjectId(session.userId),
     name: parsedData.name,
     last_contact_date: new Date(parsedData.last_contact_date),
     createdAt: new Date(),

@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 
 import { getDb } from '@/lib/mongo';
+import { getSession } from '@/lib/session';
 
 import { getSignedUrl } from './getSignedUrl';
 import { ContactDocument } from '../_types/ContactDocument';
@@ -9,6 +10,12 @@ import { GetSerializedContactResponse } from '../_types/GetSerializedContactResp
 export async function getSerializedContact(
   id: string
 ): Promise<GetSerializedContactResponse> {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Not authorized');
+  }
+
   const db = await getDb();
 
   const arr = await db
@@ -16,6 +23,7 @@ export async function getSerializedContact(
     .aggregate<ContactDocument>([
       {
         $match: {
+          owner: new ObjectId(session.userId),
           _id: new ObjectId(id),
         },
       },

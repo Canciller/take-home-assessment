@@ -1,4 +1,4 @@
-import { serializeError } from 'serialize-error';
+import { errorResponse } from '@/utils/errorResponse';
 
 import { signIn } from '../_services/signIn';
 
@@ -9,15 +9,6 @@ export async function POST(req: Request) {
 
     return new Response();
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }

@@ -1,4 +1,4 @@
-import { serializeError } from 'serialize-error';
+import { errorResponse } from '@/utils/errorResponse';
 
 import { createContact } from '../../_services/createContact';
 
@@ -10,15 +10,6 @@ export async function POST(request: Request) {
 
     return Response.json(data);
   } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        error: serializeError(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse(error);
   }
 }

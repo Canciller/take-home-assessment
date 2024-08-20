@@ -9,5 +9,14 @@ export async function getCurrentUser() {
     return null;
   }
 
-  return getUser(session.userId);
+  const user = await getUser(session.userId);
+
+  if (!user) {
+    return null;
+  }
+
+  // @ts-ignore
+  delete user.password;
+
+  return user;
 }
