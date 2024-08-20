@@ -104,6 +104,7 @@ export default function SignUp() {
                       {...field}
                       type="password"
                       placeholder="Enter password"
+                      autoComplete="new-password"
                     />
                   </FormControl>
                   <FormMessage />
@@ -123,6 +124,7 @@ export default function SignUp() {
                       {...field}
                       type="password"
                       placeholder="Enter password confirmation"
+                      autoComplete="new-password"
                     />
                   </FormControl>
                   <FormMessage />
